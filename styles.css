@@ -1,0 +1,403 @@
+/* Variables */
+:root {
+  --primary: #6d5dfc;
+  --primary-light: #c8c7ff;
+  --dark: #1f2029;
+  --greyLight-1: #e4ebf5;
+  --greyLight-2: #c8d0e7;
+  --greyDark: #9baacf;
+  --shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem #fff;
+  --inner-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem #fff;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--greyLight-1);
+  color: var(--dark);
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Main Content */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+section {
+  background-color: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+h2 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+h3 {
+  color: var(--dark);
+  margin: 1.5rem 0 1rem;
+  font-size: 1.4rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Data Overview Section */
+.data-overview {
+  margin-top: 2rem;
+}
+
+#data-loading-status {
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: var(--greyDark);
+}
+
+.overview-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Gene Grid */
+.gene-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.gene-card {
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.gene-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gene-header {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.gene-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.gene-body {
+  padding: 1.5rem;
+}
+
+.gene-description {
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.view-btn {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.view-btn:hover {
+  background-color: #5a4cdb;
+}
+
+/* Chart Containers */
+.chart-container {
+  margin: 1.5rem 0;
+  min-height: 400px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: var(--inner-shadow);
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid var(--greyLight-2);
+}
+
+th {
+  background-color: var(--greyLight-1);
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: var(--greyLight-1);
+}
+
+/* Consequence color coding */
+.consequence-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.color-box {
+  width: 15px;
+  height: 15px;
+  margin-right: 0.5rem;
+  border-radius: 3px;
+}
+
+.missense {
+  background-color: #ff7070;
+}
+
+.synonymous {
+  background-color: #70ff70;
+}
+
+.intron {
+  background-color: #7070ff;
+}
+
+.utr {
+  background-color: #ffdd57;
+}
+
+.splice {
+  background-color: #ff70ff;
+}
+
+.frameshift {
+  background-color: #ff9770;
+}
+
+/* Multigenic Analysis */
+.multigenic-section {
+  margin-top: 2rem;
+}
+
+.comparison-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.gene-comparison {
+  min-width: 800px;
+}
+
+.gene-comparison th {
+  position: sticky;
+  top: 0;
+  background-color: var(--greyLight-1);
+}
+
+.highlight {
+  background-color: rgba(109, 93, 252, 0.1);
+  font-weight: 600;
+}
+
+/* Author info */
+.author-info {
+  text-align: center;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(--greyDark);
+}
+
+.author-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Footer */
+footer {
+  background-color: var(--dark);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Data tables */
+.data-table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 800px;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  background-color: var(--greyLight-1);
+  z-index: 10;
+}
+
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-search {
+  padding: 0.5rem;
+  border: 1px solid var(--greyLight-2);
+  border-radius: 4px;
+  width: 300px;
+}
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-btn {
+  background-color: var(--greyLight-1);
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination-btn:hover {
+  background-color: var(--greyLight-2);
+}
+
+.pagination-btn.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gene-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .overview-charts {
+    grid-template-columns: 1fr;
+  }
+}

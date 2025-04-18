@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Genético de Esquizofrenia</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.24.1/dist/plotly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Estudio Genético de la Esquizofrenia</h1>
+            <p class="subtitle">Análisis de alteraciones genéticas desde una perspectiva molecular y su relación con la esquizofrenia</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h2>Introducción al Estudio</h2>
+            <p>Bienvenido a nuestra plataforma de investigación sobre la esquizofrenia desde una perspectiva genética. Este proyecto se centra en el análisis de varios genes clave que han sido asociados con la esquizofrenia a través de diversos estudios científicos.</p>
+            <p>La esquizofrenia es un trastorno mental complejo que afecta aproximadamente al 1% de la población mundial. Aunque su etiología exacta sigue siendo desconocida, existe evidencia sustancial que sugiere una fuerte contribución genética en su desarrollo.</p>
+            <p>En este estudio, analizamos variantes genéticas en seis genes candidatos: <strong>CACNA1C</strong>, <strong>COMT</strong>, <strong>DAOA</strong>, <strong>DISC1</strong>, <strong>GRM3</strong> y <strong>NRG1</strong>. Cada uno de estos genes ha sido implicado en procesos neurobiológicos relevantes para la esquizofrenia.</p>
+        </section>
+        
+        <section class="data-section">
+            <h2>Metodología</h2>
+            <p>Este estudio utiliza datos genómicos de variantes asociadas con esquizofrenia, obtenidos de la base de datos SCHEMA Browser. Para cada gen, analizamos las variantes genéticas identificadas en pacientes con esquizofrenia (casos) y controles sanos.</p>
+            
+            <h3>Procesamiento de Datos</h3>
+            <p>Los datos fueron procesados utilizando técnicas de análisis estadístico para garantizar su calidad y fiabilidad. Para cada variante, calculamos:</p>
+            <ul>
+                <li>Frecuencias alélicas en casos y controles</li>
+                <li>Significancia estadística de las diferencias (valor P)</li>
+                <li>Estimación del efecto (magnitud y dirección)</li>
+                <li>Distribución de variantes por tipo de consecuencia funcional</li>
+            </ul>
+            
+            <h3>Análisis Realizados</h3>
+            <ul>
+                <li>Comparación de frecuencias alélicas entre casos y controles</li>
+                <li>Identificación de variantes exclusivas de casos o controles</li>
+                <li>Análisis de la distribución genómica de variantes</li>
+                <li>Evaluación de la significancia estadística de las asociaciones</li>
+                <li>Análisis comparativo entre los diferentes genes estudiados</li>
+            </ul>
+        </section>
+
+        <section class="data-overview">
+            <h2>Resumen de Datos</h2>
+            <div id="data-loading-status">Cargando datos de genes...</div>
+            <div class="overview-charts">
+                <div class="chart-container">
+                    <h3>Distribución de Variantes por Gen</h3>
+                    <div id="variants-by-gene-chart"></div>
+                </div>
+                <div class="chart-container">
+                    <h3>Tipos de Consecuencias por Gen</h3>
+                    <div id="consequence-types-chart"></div>
+                </div>
+            </div>
+        </section>
+
+        <h2>Genes en Estudio</h2>
+        <div class="gene-grid" id="gene-grid">
+            <!-- Gene cards will be generated dynamically -->
+        </div>
+
+        <section class="multigenic-section">
+            <h2>Análisis Multigénico</h2>
+            <p>El estudio comparativo de los seis genes analizados revela patrones interesantes en la distribución y características de las variantes genéticas asociadas con esquizofrenia.</p>
+            
+            <div class="chart-container">
+                <h3>Comparación de Variantes Significativas entre Genes</h3>
+                <div id="significant-variants-chart"></div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Distribución de Tipos de Consecuencia por Gen</h3>
+                <div id="consequence-distribution-chart"></div>
+            </div>
+            
+            <h3>Comparación entre Genes</h3>
+            <div class="comparison-table" id="gene-comparison-table">
+                <!-- Table will be generated dynamically -->
+            </div>
+            
+            <h3>Hallazgos Principales</h3>
+            <div id="multigenic-findings">
+                <!-- Will be populated based on actual data analysis -->
+            </div>
+        </section>
+
+        <section class="glossary">
+            <h2>Glosario de Términos Genéticos</h2>
+            <div class="glossary-term">
+                <div class="term-name">Variant ID</div>
+                <p>Identificador único que proporciona información sobre el cromosoma, la posición exacta en el genoma, y los nucleótidos implicados (original y mutado). Formato: cromosoma-posición-nucleótido_original-nucleótido_alternativo (ej: 1-231762607-G-A).</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">HGVSp/c</div>
+                <p>Sistema de nomenclatura estandarizado por la Human Genome Variation Society para describir variantes a nivel de ADN (c.) o proteína (p.). Ejemplos: p.Ala13Gly (cambio de Alanina por Glicina en posición 13), c.68-44T>G (cambio de T por G 44 bases antes del exón).</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">Consequence</div>
+                <p>Consecuencia funcional predicha de la variante. Incluye categorías como missense (cambio de aminoácido), synonymous (sin cambio de aminoácido), splice region (afecta empalme), frameshift (cambio en marco de lectura), etc.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">AC Case / AC Control</div>
+                <p>Conteo alélico en casos (pacientes con esquizofrenia) o controles (personas sanas). Indica cuántas veces se observó el alelo alternativo.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">AN Case / AN Control</div>
+                <p>Número total de alelos analizados en casos o controles. Representa el tamaño de la muestra multiplicado por 2 (diploidía).</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">AF Case / AF Control</div>
+                <p>Frecuencia alélica en casos o controles. Se calcula como AC/AN y representa la proporción del alelo alternativo en la población estudiada.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">No. de novos</div>
+                <p>Número de variantes de novo (nuevas, no heredadas) identificadas en los casos.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">P-Val</div>
+                <p>Valor de significancia estadística que indica la probabilidad de observar los datos si no hubiera asociación real. Valores menores a 0.05 generalmente se consideran estadísticamente significativos.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">Estimate</div>
+                <p>Estimación del efecto de la variante. Valores positivos indican mayor riesgo de esquizofrenia, valores negativos sugieren efecto protector.</p>
+            </div>
+            <div class="glossary-term">
+                <div class="term-name">MPC (Missense badness, PolyPhen, Constraint)</div>
+                <p>Puntuación que predice el impacto funcional de variantes missense. Valores más altos (≥2) indican mayor probabilidad de efecto deletéreo.</p>
+            </div>
+        </section>
+        
+        <div class="author-info">
+            <p>Estudio realizado por <span class="author-name">Jose David Quiñonez Rehenals</span></p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+            <p>Datos obtenidos de SCHEMA Browser</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 Estudio Genético de Esquizofrenia</p>
+            <p>Desarrollado por Jose David Quiñonez Rehenals</p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+        </div>
+    </footer>
+
+    <script src="js/data-processor.js"></script>
+    <script src="js/visualizations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

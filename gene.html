@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis del Gen - Estudio Genético de Esquizofrenia</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.24.1/dist/plotly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Análisis del Gen <span id="gene-title"></span></h1>
+            <p class="subtitle">Estudio de variantes genéticas y su asociación con esquizofrenia</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="back-link">
+            <a href="index.html">&larr; Volver a la página principal</a>
+        </div>
+        
+        <section class="gene-info">
+            <h2>Información del Gen <span id="gene-name"></span></h2>
+            <div id="gene-description"></div>
+            
+            <div id="data-loading-status">Cargando datos del gen...</div>
+            
+            <div class="gene-summary" id="gene-summary" style="display: none;">
+                <h3>Resumen de Variantes</h3>
+                <div id="summary-content"></div>
+            </div>
+        </section>
+        
+        <section class="data-section">
+            <h2>Visualización de Datos</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="changeTab('frequency-tab')">Frecuencias Alélicas</div>
+                <div class="tab" onclick="changeTab('genomic-tab')">Distribución Genómica</div>
+                <div class="tab" onclick="changeTab('significance-tab')">Significancia Estadística</div>
+                <div class="tab" onclick="changeTab('data-table-tab')">Tabla de Datos</div>
+            </div>
+            
+            <div class="tab-content active" id="frequency-tab">
+                <h3>Comparación de Frecuencias Alélicas: Casos vs Controles</h3>
+                <p>Este gráfico compara las frecuencias alélicas de cada variante entre casos (pacientes con esquizofrenia) y controles (personas sanas). Los puntos por encima de la línea diagonal representan variantes más frecuentes en casos que en controles, lo que podría sugerir un riesgo potencial para esquizofrenia.</p>
+                <div class="chart-container" id="frequency-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="genomic-tab">
+                <h3>Distribución Genómica de Variantes</h3>
+                <p>Este gráfico muestra la distribución posicional de las variantes a lo largo del gen. Permite identificar regiones "hotspot" con alta densidad de variantes, que podrían ser funcionalmente importantes.</p>
+                <div class="chart-container" id="genomic-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="significance-tab">
+                <h3>Análisis de Significancia Estadística</h3>
+                <p>El gráfico de volcán visualiza la significancia estadística (eje Y) y la magnitud del efecto (eje X) de cada variante. Las variantes por encima de la línea roja horizontal (p<0.05) son estadísticamente significativas.</p>
+                <div class="chart-container" id="volcano-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="data-table-tab">
+                <h3>Tabla Completa de Variantes</h3>
+                <p>Esta tabla muestra todas las variantes identificadas en el gen. Utilice la búsqueda para encontrar variantes específicas.</p>
+                <div id="data-table"></div>
+            </div>
+        </section>
+        
+        <section class="conclusions">
+            <h2>Conclusiones</h2>
+            <div id="conclusions-content">
+                <!-- Will be populated based on actual data analysis -->
+            </div>
+        </section>
+        
+        <div class="author-info">
+            <p>Estudio realizado por <span class="author-name">Jose David Quiñonez Rehenals</span></p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+            <p>Datos obtenidos de SCHEMA Browser</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 Estudio Genético de Esquizofrenia</p>
+            <p>Desarrollado por Jose David Quiñonez Rehenals</p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+        </div>
+    </footer>
+
+    <script src="js/data-processor.js"></script>
+    <script src="js/visualizations.js"></script>
+    <script>
+        // Get gene from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const gene = urlParams.get('gene');
+        
+        // Use geneDescriptions from dataProcessor instead of redeclaring it
+        //const { geneDescriptions } = window.dataProcessor;
+        
+        // Set gene title and name
+        document.getElementById('gene-title').textContent = gene || '';
+        document.getElementById('gene-name').textContent = gene || '';
+        
+        // Set gene description
+        if (gene && geneDescriptions[gene]) {
+            document.getElementById('gene-description').innerHTML = geneDescriptions[gene];
+        } else {
+            document.getElementById('gene-description').innerHTML = '<p>Información no disponible para este gen.</p>';
+        }
+        
+        // Initialize the page
+        function initGenePage() {
+            if (!gene) {
+                document.getElementById('data-loading-status').textContent = 'Error: Gen no especificado';
+                return;
+            }
+            
+            // Show loading status
+            document.getElementById('data-loading-status').innerHTML = 
+                '<div class="loading-spinner"></div><p>Cargando datos del gen...</p>';
+            
+            // Load gene data
+            window.dataProcessor.loadAllGeneData()
+                .then(() => {
+                    // Update loading status
+                    document.getElementById('data-loading-status').textContent = 
+                        'Datos cargados correctamente. Generando visualizaciones...';
+                    
+                    // Create visualizations
+                    window.visualizations.createFrequencyComparisonChart('frequency-chart', gene);
+                    window.visualizations.createGenomicDistributionPlot('genomic-chart', gene);
+                    window.visualizations.createVolcanoPlot('volcano-chart', gene);
+                    window.visualizations.createDataTable('data-table', gene);
+                    
+                    // Show gene summary
+                    displayGeneSummary();
+                    
+                    // Generate conclusions
+                    generateConclusions();
+                    
+                    // Hide loading status
+                    document.getElementById('data-loading-status').style.display = 'none';
+                    document.getElementById('gene-summary').style.display = 'block';
+                    
+                    console.log('Gene page initialized successfully');
+                })
+                .catch(error => {
+                    console.error('Error initializing gene page:', error);
+                    document.getElementById('data-loading-status').textContent = 
+                        'Error cargando datos. Por favor, recargue la página.';
+                });
+        }
+        
+        // Display gene summary
+        function displayGeneSummary() {
+            const { geneData } = window.dataProcessor;
+            
+            if (!geneData.isLoaded || !geneData.summaries[gene]) {
+                return;
+            }
+            
+            const summary = geneData.summaries[gene];
+            
+            // Create summary HTML
+            let summaryHtml = `
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${summary.totalVariants}</div>
+                        <div class="stat-label">Variantes Totales</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${summary.caseOnly}</div>
+                        <div class="stat-label">Exclusivas en Casos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${summary.controlOnly}</div>
+                        <div class="stat-label">Exclusivas en Controles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${summary.significant}</div>
+                        <div class="stat-label">Significativas (p<0.05)</div>
+                    </div>
+                </div>
+                
+                <h4>Distribución por Tipo de Consecuencia</h4>
+                <div class="consequence-distribution">
+            `;
+            
+            // Add consequence counts
+            const consequenceTypes = Object.keys(summary.consequenceCounts);
+            consequenceTypes.forEach(type => {
+                const count = summary.consequenceCounts[type];
+                const percentage = ((count / summary.totalVariants) * 100).toFixed(1);
+                
+                summaryHtml += `
+                    <div class="consequence-item">
+                        <div class="consequence-name">${type}</div>
+                        <div class="consequence-bar-container">
+                            <div class="consequence-bar" style="width: ${percentage}%"></div>
+                            <div class="consequence-count">${count} (${percentage}%)</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            summaryHtml += '</div>';
+            
+            // Set summary HTML
+            document.getElementById('summary-content').innerHTML = summaryHtml;
+        }
+        
+        // Generate conclusions based on data
+        function generateConclusions() {
+            const { geneData } = window.dataProcessor;
+            
+            if (!geneData.isLoaded || !geneData.data[gene]) {
+                return;
+            }
+            
+            const data = geneData.data[gene];
+            const summary = geneData.summaries[gene];
+            
+            // Generate conclusions based on the data
+            let conclusions = [];
+            
+            // Conclusion about total variants
+            conclusions.push(`<p>El análisis del gen ${gene} identificó un total de ${summary.totalVariants} variantes genéticas, de las cuales ${summary.caseOnly} fueron exclusivas de pacientes con esquizofrenia y ${summary.controlOnly} exclusivas de controles sanos.</p>`);
+            
+            // Conclusion about consequence types
+            const mostCommonType = Object.entries(summary.consequenceCounts)
+                .sort((a, b) => b[1] - a[1])[0];
+            
+            conclusions.push(`<p>La mayoría de las variantes identificadas fueron de tipo ${mostCommonType[0]} (${mostCommonType[1]} variantes, ${((mostCommonType[1] / summary.totalVariants) * 100).toFixed(1)}% del total), lo que sugiere que ${gene} podría estar sujeto principalmente a este tipo de mutaciones.</p>`);
+            
+            // Conclusion about significant variants
+            if (summary.significant > 0) {
+                conclusions.push(`<p>Se identificaron ${summary.significant} variantes con asociación estadísticamente significativa (p<0.05) con esquizofrenia, lo que refuerza la importancia de ${gene} como gen candidato para este trastorno.</p>`);
+                
+                // Get the most significant variant
+                const mostSignificant = data
+                    .filter(v => !isNaN(v.pVal))
+                    .sort((a, b) => a.pVal - b.pVal)[0];
+                
+                if (mostSignificant) {
+                    conclusions.push(`<p>La variante más significativa (${mostSignificant.variantId}, p=${mostSignificant.pVal.toExponential(2)}) es de tipo ${mostSignificant.consequence}, lo que sugiere un posible mecanismo molecular para la asociación de ${gene} con esquizofrenia.</p>`);
+                }
+            } else {
+                conclusions.push(`<p>Aunque no se identificaron variantes con asociación estadísticamente significativa (p<0.05) en este conjunto de datos, la presencia de ${summary.caseOnly} variantes exclusivas en pacientes con esquizofrenia sugiere que ${gene} podría contribuir al riesgo de la enfermedad a través de variantes raras.</p>`);
+            }
+            
+            // Conclusion about case vs control frequencies
+            const avgRatio = summary.avgAfCase / summary.avgAfControl;
+            if (avgRatio > 1.2) {
+                conclusions.push(`<p>En promedio, las variantes de ${gene} mostraron una frecuencia ${avgRatio.toFixed(2)} veces mayor en casos que en controles, lo que sugiere un enriquecimiento de variantes en pacientes con esquizofrenia.</p>`);
+            } else if (avgRatio < 0.8) {
+                conclusions.push(`<p>En promedio, las variantes de ${gene} mostraron una frecuencia ${(1/avgRatio).toFixed(2)} veces menor en casos que en controles, lo que podría sugerir un posible efecto protector de algunas variantes.</p>`);
+            } else {
+                conclusions.push(`<p>En promedio, las variantes de ${gene} mostraron frecuencias similares en casos y controles, lo que sugiere que la contribución de este gen a la esquizofrenia podría estar mediada por variantes específicas más que por un efecto general.</p>`);
+            }
+            
+            // Overall conclusion
+            conclusions.push(`<p>En conclusión, el análisis de las variantes genéticas en ${gene} proporciona evidencia de su posible implicación en la patogénesis de la esquizofrenia. La identificación de variantes exclusivas en pacientes y la distribución de tipos de consecuencia funcional sugieren mecanismos moleculares específicos que podrían contribuir al desarrollo de la enfermedad. Se requieren estudios funcionales adicionales para validar estas asociaciones y comprender mejor el papel de ${gene} en la esquizofrenia.</p>`);
+            
+            // Set conclusions HTML
+            document.getElementById('conclusions-content').innerHTML = conclusions.join('');
+        }
+        
+        // Tab functionality
+        function changeTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab and content
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Initialize the page when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initGenePage);
+    </script>
+</body>
+</html>

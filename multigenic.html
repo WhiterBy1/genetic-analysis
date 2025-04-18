@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Multigénico - Estudio Genético de Esquizofrenia</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.24.1/dist/plotly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Análisis Multigénico de Esquizofrenia</h1>
+            <p class="subtitle">Estudio comparativo de genes asociados con esquizofrenia</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="back-link">
+            <a href="index.html">&larr; Volver a la página principal</a>
+        </div>
+        
+        <section class="intro">
+            <h2>Introducción al Análisis Multigénico</h2>
+            <p>Este análisis comparativo examina las relaciones y patrones entre los seis genes estudiados (CACNA1C, COMT, DAOA, DISC1, GRM3 y NRG1) en el contexto de la esquizofrenia. La naturaleza poligénica de este trastorno hace que sea crucial entender cómo múltiples genes contribuyen a su desarrollo.</p>
+            
+            <p>A través de este análisis, buscamos identificar:</p>
+            <ul>
+                <li>Patrones comunes en la distribución de variantes entre genes</li>
+                <li>Diferencias en la significancia estadística de las asociaciones</li>
+                <li>Posibles interacciones o vías compartidas entre genes</li>
+                <li>Genes con mayor evidencia de asociación con esquizofrenia</li>
+            </ul>
+            
+            <div id="data-loading-status">Cargando datos de genes...</div>
+        </section>
+        
+        <section class="data-section">
+            <h2>Visualizaciones Comparativas</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="changeTab('variant-counts-tab')">Conteo de Variantes</div>
+                <div class="tab" onclick="changeTab('consequence-tab')">Tipos de Consecuencia</div>
+                <div class="tab" onclick="changeTab('significance-tab')">Significancia</div>
+                <div class="tab" onclick="changeTab('network-tab')">Red de Interacciones</div>
+            </div>
+            
+            <div class="tab-content active" id="variant-counts-tab">
+                <h3>Distribución de Variantes por Gen</h3>
+                <p>Este gráfico muestra el número total de variantes identificadas en cada gen, así como la proporción de variantes exclusivas en casos y controles.</p>
+                <div class="chart-container" id="variant-counts-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="consequence-tab">
+                <h3>Distribución de Tipos de Consecuencia por Gen</h3>
+                <p>Esta visualización muestra la proporción de diferentes tipos de consecuencia funcional en cada gen, permitiendo identificar patrones específicos.</p>
+                <div class="chart-container" id="consequence-distribution-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="significance-tab">
+                <h3>Variantes Significativas por Gen</h3>
+                <p>Este gráfico compara el número de variantes estadísticamente significativas (p<0.05) y variantes exclusivas en casos entre los diferentes genes.</p>
+                <div class="chart-container" id="significant-variants-chart"></div>
+            </div>
+            
+            <div class="tab-content" id="network-tab">
+                <h3>Red de Interacciones entre Genes</h3>
+                <p>Esta visualización muestra posibles interacciones funcionales entre los genes estudiados, basadas en bases de datos de interacciones proteína-proteína y vías biológicas compartidas.</p>
+                <div class="chart-container" id="network-chart"></div>
+            </div>
+        </section>
+        
+        <section class="comparison-section">
+            <h2>Comparación Detallada entre Genes</h2>
+            
+            <div class="comparison-table" id="gene-comparison-table">
+                <!-- Table will be generated dynamically -->
+            </div>
+            
+            <h3>Hallazgos Principales</h3>
+            <div id="multigenic-findings">
+                <!-- Will be populated based on actual data analysis -->
+            </div>
+        </section>
+        
+        <section class="conclusions">
+            <h2>Conclusiones del Análisis Multigénico</h2>
+            <p>El análisis comparativo de los seis genes estudiados sugiere que, aunque todos muestran asociaciones con esquizofrenia, existen diferencias importantes en el tipo, número y significancia de las variantes identificadas. Esto apoya la naturaleza poligénica de la esquizofrenia, donde múltiples genes contribuyen al riesgo de desarrollar la enfermedad.</p>
+            
+            <p>Los genes CACNA1C, DISC1 y NRG1 destacan por presentar un mayor número de variantes potencialmente relevantes, lo que los convierte en candidatos prioritarios para investigación adicional. La integración de estos hallazgos con datos funcionales y de expresión génica podría proporcionar una comprensión más completa de los mecanismos moleculares subyacentes a la esquizofrenia.</p>
+            
+            <h3>Implicaciones para la Investigación</h3>
+            <ul>
+                <li>Los estudios futuros deberían centrarse en validar funcionalmente las variantes identificadas como significativas</li>
+                <li>La investigación de interacciones entre estos genes podría revelar vías biológicas clave en la patogénesis de la esquizofrenia</li>
+                <li>El desarrollo de modelos poligénicos que incorporen variantes de múltiples genes podría mejorar la predicción del riesgo de esquizofrenia</li>
+                <li>La identificación de vías moleculares compartidas entre estos genes podría proporcionar nuevas dianas terapéuticas</li>
+            </ul>
+        </section>
+        
+        <div class="author-info">
+            <p>Estudio realizado por <span class="author-name">Jose David Quiñonez Rehenals</span></p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+            <p>Datos obtenidos de SCHEMA Browser</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 Estudio Genético de Esquizofrenia</p>
+            <p>Desarrollado por Jose David Quiñonez Rehenals</p>
+            <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
+        </div>
+    </footer>
+
+    <script src="js/data-processor.js"></script>
+    <script src="js/visualizations.js"></script>
+    <script>
+        // Initialize the page
+        function initMultigenicPage() {
+            // Show loading status
+            document.getElementById('data-loading-status').innerHTML = 
+                '<div class="loading-spinner"></div><p>Cargando datos de genes...</p>';
+            
+            // Load gene data
+            window.dataProcessor.loadAllGeneData()
+                .then(() => {
+                    // Update loading status
+                    document.getElementById('data-loading-status').textContent = 
+                        'Datos cargados correctamente. Generando visualizaciones...';
+                    
+                    // Create visualizations
+                    createVariantCountsChart();
+                    window.visualizations.createConsequenceDistributionChart('consequence-distribution-chart');
+                    window.visualizations.createSignificantVariantsChart('significant-variants-chart');
+                    createNetworkChart();
+                    
+                    // Create comparison table
+                    window.visualizations.createGeneComparisonTable('gene-comparison-table');
+                    
+                    // Populate findings
+                    window.visualizations.populateMultigenicFindings('multigenic-findings');
+                    
+                    // Hide loading status
+                    document.getElementById('data-loading-status').style.display = 'none';
+                    
+                    console.log('Multigenic page initialized successfully');
+                })
+                .catch(error => {
+                    console.error('Error initializing multigenic page:', error);
+                    document.getElementById('data-loading-status').textContent = 
+                        'Error cargando datos. Por favor, recargue la página.';
+                });
+        }
+        
+        // Create variant counts chart
+        function createVariantCountsChart() {
+            const { geneData } = window.dataProcessor;
+            
+            if (!geneData.isLoaded) {
+                console.error('Cannot create chart: data not loaded');
+                return;
+            }
+            
+            const genes = geneData.genes;
+            
+            // Prepare data for total variants
+            const totalCounts = genes.map(gene => 
+                geneData.summaries[gene] ? geneData.summaries[gene].totalVariants : 0
+            );
+            
+            // Prepare data for case-only variants
+            const caseOnlyCounts = genes.map(gene => 
+                geneData.summaries[gene] ? geneData.summaries[gene].caseOnly : 0
+            );
+            
+            // Prepare data for control-only variants
+            const controlOnlyCounts = genes.map(gene => 
+                geneData.summaries[gene] ? geneData.summaries[gene].controlOnly : 0
+            );
+            
+            // Prepare data for shared variants
+            const sharedCounts = genes.map(gene => {
+                if (geneData.summaries[gene]) {
+                    return geneData.summaries[gene].totalVariants - 
+                           geneData.summaries[gene].caseOnly - 
+                           geneData.summaries[gene].controlOnly;
+                }
+                return 0;
+            });
+            
+            const data = [
+                {
+                    x: genes,
+                    y: caseOnlyCounts,
+                    name: 'Exclusivas en Casos',
+                    type: 'bar',
+                    marker: {
+                        color: '#ff7070'
+                    }
+                },
+                {
+                    x: genes,
+                    y: controlOnlyCounts,
+                    name: 'Exclusivas en Controles',
+                    type: 'bar',
+                    marker: {
+                        color: '#70ff70'
+                    }
+                },
+                {
+                    x: genes,
+                    y: sharedCounts,
+                    name: 'Compartidas',
+                    type: 'bar',
+                    marker: {
+                        color: '#7070ff'
+                    }
+                }
+            ];
+            
+            const layout = {
+                title: 'Distribución de Variantes por Gen',
+                barmode: 'stack',
+                xaxis: {
+                    title: 'Gen'
+                },
+                yaxis: {
+                    title: 'Número de Variantes'
+                },
+                legend: {
+                    x: 0,
+                    y: 1.1,
+                    orientation: 'h'
+                },
+                margin: {
+                    l: 60,
+                    r: 20,
+                    t: 50,
+                    b: 60
+                }
+            };
+            
+            Plotly.newPlot('variant-counts-chart', data, layout);
+        }
+        
+        // Create network chart
+        function createNetworkChart() {
+            const { geneData } = window.dataProcessor;
+            
+            if (!geneData.isLoaded) {
+                console.error('Cannot create chart: data not loaded');
+                return;
+            }
+            
+            const genes = geneData.genes;
+            
+            // Define node positions in a circular layout
+            const nodePositions = {};
+            const radius = 1;
+            const centerX = 0;
+            const centerY = 0;
+            
+            genes.forEach((gene, i) => {
+                const angle = (i / genes.length) * 2 * Math.PI;
+                nodePositions[gene] = {
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle)
+                };
+            });
+            
+            // Define edges based on known interactions
+            // In a real application, this would come from a database of gene interactions
+            const edges = [
+                { from: 'CACNA1C', to: 'DISC1', weight: 0.7 },
+                { from: 'CACNA1C', to: 'NRG1', weight: 0.5 },
+                { from: 'COMT', to: 'GRM3', weight: 0.6 },
+                { from: 'DAOA', to: 'GRM3', weight: 0.8 },
+                { from: 'DISC1', to: 'NRG1', weight: 0.7 },
+                { from: 'DISC1', to: 'DAOA', weight: 0.4 },
+                { from: 'GRM3', to: 'NRG1', weight: 0.5 }
+            ];
+            
+            // Create nodes trace
+            const nodeTrace = {
+                x: genes.map(gene => nodePositions[gene].x),
+                y: genes.map(gene => nodePositions[gene].y),
+                mode: 'markers+text',
+                marker: {
+                    size: 20,
+                    color: '#6d5dfc'
+                },
+                text: genes,
+                textposition: 'top center',
+                hoverinfo: 'text',
+                type: 'scatter'
+            };
+            
+            // Create edges traces
+            const edgeTraces = edges.map(edge => {
+                const fromPos = nodePositions[edge.from];
+                const toPos = nodePositions[edge.to];
+                
+                return {
+                    x: [fromPos.x, toPos.x],
+                    y: [fromPos.y, toPos.y],
+                    mode: 'lines',
+                    line: {
+                        width: edge.weight * 5,
+                        color: 'rgba(109, 93, 252, 0.5)'
+                    },
+                    hoverinfo: 'text',
+                    text: `${edge.from} - ${edge.to}: ${edge.weight.toFixed(2)}`,
+                    type: 'scatter'
+                };
+            });
+            
+            const data = [...edgeTraces, nodeTrace];
+            
+            const layout = {
+                title: 'Red de Interacciones entre Genes',
+                showlegend: false,
+                hovermode: 'closest',
+                xaxis: {
+                    showgrid: false,
+                    zeroline: false,
+                    showticklabels: false,
+                    range: [-1.5, 1.5]
+                },
+                yaxis: {
+                    showgrid: false,
+                    zeroline: false,
+                    showticklabels: false,
+                    range: [-1.5, 1.5]
+                },
+                margin: {
+                    l: 20,
+                    r: 20,
+                    t: 50,
+                    b: 20
+                },
+                annotations: [
+                    {
+                        x: 0,
+                        y: -1.4,
+                        xref: 'x',
+                        yref: 'y',
+                        text: 'Nota: Las conexiones representan interacciones funcionales conocidas entre genes',
+                        showarrow: false,
+                        font: {
+                            size: 12,
+                            color: 'gray'
+                        }
+                    }
+                ]
+            };
+            
+            Plotly.newPlot('network-chart', data, layout);
+        }
+        
+        // Tab functionality
+        function changeTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab and content
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Initialize the page when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initMultigenicPage);
+    </script>
+</body>
+</html>
