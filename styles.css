@@ -127,6 +127,38 @@ li {
   width: 100%; /* Asegura que todos los contenedores de gráficos ocupen el ancho completo */
 }
 
+.chart-description {
+  font-size: 0.95rem;
+  color: var(--greyDark);
+  margin-bottom: 1rem;
+}
+
+/* Botones de alternancia de vista */
+.view-toggle {
+  display: flex;
+  margin-bottom: 1rem;
+  justify-content: flex-start;
+}
+
+.toggle-btn {
+  background-color: var(--greyLight-1);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: var(--greyLight-2);
+}
+
+.toggle-btn.active {
+  background-color: var(--primary);
+  color: white;
+}
+
 /* Botón de expansión para gráficos */
 .expand-btn {
   position: absolute;

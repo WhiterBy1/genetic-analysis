@@ -47,6 +47,15 @@
                 <li>Evaluación de la significancia estadística de las asociaciones</li>
                 <li>Análisis comparativo entre los diferentes genes estudiados</li>
             </ul>
+            
+            <h3>Clasificación de Variantes de Alto Impacto</h3>
+            <p>En este estudio, clasificamos como "variantes de alto impacto" aquellas que cumplen al menos uno de los siguientes criterios:</p>
+            <ul>
+                <li><strong>Variantes missense con puntuación MPC ≥ 2:</strong> La puntuación MPC (Missense badness, PolyPhen, Constraint) es un indicador que combina múltiples algoritmos de predicción para evaluar el impacto funcional de variantes missense. Valores ≥ 2 indican una alta probabilidad de efecto deletéreo en la función proteica.</li>
+                <li><strong>Variantes frameshift:</strong> Estas variantes alteran el marco de lectura del gen, lo que generalmente resulta en una proteína truncada o no funcional.</li>
+                <li><strong>Variantes start_lost:</strong> Afectan al codón de inicio de la traducción, impidiendo la correcta síntesis de la proteína.</li>
+            </ul>
+            <p>Estas variantes tienen mayor probabilidad de alterar significativamente la función de la proteína codificada, lo que podría contribuir directamente a la patogénesis de la esquizofrenia.</p>
         </section>
 
         <section class="data-overview">
@@ -97,6 +106,11 @@
             
             <div class="chart-container">
                 <h3>Distribución de Tipos de Consecuencia por Gen</h3>
+                <p class="chart-description">Este mapa de calor muestra la distribución de los diferentes tipos de consecuencia funcional en cada gen. Los colores más intensos indican mayor número de variantes.</p>
+                <div class="view-toggle">
+                    <button id="view-absolute" class="toggle-btn active" onclick="toggleConsequenceView('absolute')">Cantidad Absoluta</button>
+                    <button id="view-percentage" class="toggle-btn" onclick="toggleConsequenceView('percentage')">Porcentaje</button>
+                </div>
                 <button class="expand-btn" onclick="expandChart('consequence-distribution-chart', 'Distribución de Tipos de Consecuencia por Gen')">
                     <i class="fas fa-expand"></i>
                 </button>
@@ -112,6 +126,15 @@
             <div id="multigenic-findings">
                 <!-- Will be populated based on actual data analysis -->
             </div>
+            
+            <h3>Interpretación de Variantes de Alto Impacto</h3>
+            <p>Las variantes de alto impacto son particularmente relevantes en el contexto de la esquizofrenia por las siguientes razones:</p>
+            <ul>
+                <li><strong>Alteración de la función proteica:</strong> Las variantes missense con puntuación MPC ≥ 2 tienen alta probabilidad de alterar la estructura tridimensional de la proteína o afectar sitios funcionalmente importantes, como dominios de unión a ligandos o interacción con otras proteínas.</li>
+                <li><strong>Pérdida completa de función:</strong> Las variantes frameshift y start_lost generalmente resultan en proteínas truncadas o ausentes, lo que puede eliminar completamente la función del gen afectado.</li>
+                <li><strong>Relevancia biológica:</strong> Los genes con mayor proporción de variantes de alto impacto en pacientes con esquizofrenia podrían tener un papel más directo en la patogénesis de la enfermedad, ya que estas alteraciones tienen mayor probabilidad de afectar vías neurobiológicas críticas.</li>
+            </ul>
+            <p>En nuestro análisis, hemos identificado que los genes con mayor número de variantes de alto impacto son potencialmente más relevantes para la esquizofrenia, ya que estas variantes tienen mayor probabilidad de alterar significativamente la función neuronal.</p>
         </section>
 
         <section class="glossary">
@@ -154,7 +177,7 @@
             </div>
             <div class="glossary-term">
                 <div class="term-name">MPC (Missense badness, PolyPhen, Constraint)</div>
-                <p>Puntuación que predice el impacto funcional de variantes missense. Valores más altos (≥2) indican mayor probabilidad de efecto deletéreo.</p>
+                <p>Puntuación que predice el impacto funcional de variantes missense. Valores más altos (≥2) indican mayor probabilidad de efecto deletéreo. Esta puntuación combina tres aspectos: la "gravedad" del cambio de aminoácido, la predicción de PolyPhen sobre el impacto estructural, y el grado de restricción evolutiva de la región afectada.</p>
             </div>
         </section>
         

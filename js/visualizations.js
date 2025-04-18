@@ -6,6 +6,9 @@
 // Declare Plotly as a global variable
 var Plotly = window.Plotly
 
+// Variable global para almacenar el modo de visualización actual
+var consequenceViewMode = "absolute"
+
 /**
  * Creates a bar chart showing variant counts by gene
  * @param {string} elementId - ID of the container element
@@ -262,8 +265,9 @@ function createSignificantVariantsChart(elementId) {
 /**
  * Creates a heatmap showing consequence distribution by gene
  * @param {string} elementId - ID of the container element
+ * @param {string} mode - 'absolute' for raw counts or 'percentage' for percentages
  */
-function createConsequenceDistributionChart(elementId) {
+function createConsequenceDistributionChart(elementId, mode = consequenceViewMode) {
   const { geneData } = window.dataProcessor
 
   if (!geneData.isLoaded) {
@@ -289,17 +293,27 @@ function createConsequenceDistributionChart(elementId) {
   const zValues = consequenceTypes.map((type) => {
     return genes.map((gene) => {
       if (geneData.summaries[gene] && geneData.summaries[gene].consequenceCounts) {
-        return geneData.summaries[gene].consequenceCounts[type] || 0
+        const count = geneData.summaries[gene].consequenceCounts[type] || 0
+        if (mode === "percentage") {
+          const total = geneData.summaries[gene].totalVariants || 1 // Avoid division by zero
+          return (count / total) * 100 // Convert to percentage
+        }
+        return count // Return absolute count
       }
       return 0
     })
   })
 
-  // Calculate percentages for each gene
-  const zPercent = consequenceTypes.map((type, i) => {
+  // Calculate text for hover
+  const zText = consequenceTypes.map((type, i) => {
     return genes.map((gene, j) => {
-      const total = geneData.summaries[gene] ? geneData.summaries[gene].totalVariants : 0
-      return total > 0 ? ((zValues[i][j] / total) * 100).toFixed(1) + "%" : "0%"
+      if (geneData.summaries[gene] && geneData.summaries[gene].consequenceCounts) {
+        const count = geneData.summaries[gene].consequenceCounts[type] || 0
+        const total = geneData.summaries[gene].totalVariants || 1
+        const percent = ((count / total) * 100).toFixed(1)
+        return `${count} variantes (${percent}%)`
+      }
+      return "0 variantes (0%)"
     })
   })
 
@@ -311,14 +325,19 @@ function createConsequenceDistributionChart(elementId) {
       type: "heatmap",
       colorscale: "Viridis",
       showscale: true,
-      text: zPercent,
+      text: zText,
       hoverinfo: "text+y+x",
-      hovertemplate: "%{y} en %{x}: %{z} variantes (%{text})<extra></extra>",
+      hovertemplate: "%{y} en %{x}: %{text}<extra></extra>",
     },
   ]
 
+  const title =
+    mode === "percentage"
+      ? "Distribución Porcentual de Tipos de Consecuencia por Gen"
+      : "Distribución de Tipos de Consecuencia por Gen (Cantidad Absoluta)"
+
   const layout = {
-    title: "Distribución de Tipos de Consecuencia por Gen",
+    title: title,
     xaxis: {
       title: "Gen",
     },
@@ -334,6 +353,22 @@ function createConsequenceDistributionChart(elementId) {
   }
 
   Plotly.newPlot(elementId, data, layout)
+}
+
+/**
+ * Cambia el modo de visualización del gráfico de distribución de consecuencias
+ * @param {string} mode - 'absolute' para conteos absolutos o 'percentage' para porcentajes
+ */
+function toggleConsequenceView(mode) {
+  // Actualizar el modo global
+  consequenceViewMode = mode
+
+  // Actualizar los botones
+  document.getElementById("view-absolute").classList.toggle("active", mode === "absolute")
+  document.getElementById("view-percentage").classList.toggle("active", mode === "percentage")
+
+  // Recrear el gráfico con el nuevo modo
+  createConsequenceDistributionChart("consequence-distribution-chart", mode)
 }
 
 /**
@@ -981,7 +1016,7 @@ function createGeneComparisonTable(elementId) {
                   .join("")}
             </tr>
             <tr>
-                <td>Variantes de alto impacto</td>
+                <td title="Variantes missense con MPC ≥ 2, frameshift o start_lost">Variantes de alto impacto</td>
                 ${geneData.genes
                   .map((gene) => {
                     const data = comparisonData.find((d) => d.gene === gene)
@@ -1035,4 +1070,5 @@ window.visualizations = {
   createDataTable,
   createGeneComparisonTable,
   populateMultigenicFindings,
+  toggleConsequenceView,
 }
