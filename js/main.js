@@ -3,9 +3,8 @@
  * Initializes the application and handles user interactions
  */
 
-console.log(geneDescriptions)
 // Use geneDescriptions from dataProcessor instead of redeclaring it
-//let { geneDescriptions } = window.dataProcessor
+// const { geneDescriptions } = window.dataProcessor
 
 /**
  * Initializes the application
@@ -31,6 +30,7 @@ function initApp() {
       // Create overview visualizations
       window.visualizations.createVariantsByGeneChart("variants-by-gene-chart")
       window.visualizations.createConsequenceTypesChart("consequence-types-chart")
+      window.visualizations.createConsequenceTypesPercentChart("consequence-types-percent-chart")
 
       // Create multigenic visualizations
       window.visualizations.createSignificantVariantsChart("significant-variants-chart")

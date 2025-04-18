@@ -118,6 +118,78 @@ function createConsequenceTypesChart(elementId) {
   Plotly.newPlot(elementId, traces, layout)
 }
 
+// Agregar esta nueva función después de createConsequenceTypesChart
+
+/**
+ * Creates a stacked bar chart showing consequence types by gene as percentages
+ * @param {string} elementId - ID of the container element
+ */
+function createConsequenceTypesPercentChart(elementId) {
+  const { geneData } = window.dataProcessor
+
+  if (!geneData.isLoaded) {
+    console.error("Cannot create chart: data not loaded")
+    return
+  }
+
+  const genes = geneData.genes
+
+  // Get all unique consequence types across all genes
+  const allConsequenceTypes = new Set()
+  genes.forEach((gene) => {
+    if (geneData.summaries[gene] && geneData.summaries[gene].consequenceCounts) {
+      Object.keys(geneData.summaries[gene].consequenceCounts).forEach((type) => {
+        allConsequenceTypes.add(type)
+      })
+    }
+  })
+
+  const consequenceTypes = Array.from(allConsequenceTypes)
+
+  // Create traces for each consequence type
+  const traces = consequenceTypes.map((type) => {
+    return {
+      x: genes,
+      y: genes.map((gene) => {
+        if (geneData.summaries[gene] && geneData.summaries[gene].consequenceCounts) {
+          const count = geneData.summaries[gene].consequenceCounts[type] || 0
+          const total = geneData.summaries[gene].totalVariants || 1 // Avoid division by zero
+          return (count / total) * 100 // Convert to percentage
+        }
+        return 0
+      }),
+      name: type,
+      type: "bar",
+      hovertemplate: "%{y:.1f}%<extra></extra>",
+    }
+  })
+
+  const layout = {
+    title: "Distribución Porcentual de Tipos de Consecuencia por Gen",
+    barmode: "stack",
+    xaxis: {
+      title: "Gen",
+    },
+    yaxis: {
+      title: "Porcentaje de Variantes (%)",
+      range: [0, 100],
+    },
+    legend: {
+      title: {
+        text: "Tipo de Consecuencia",
+      },
+    },
+    margin: {
+      l: 50,
+      r: 20,
+      t: 50,
+      b: 50,
+    },
+  }
+
+  Plotly.newPlot(elementId, traces, layout)
+}
+
 /**
  * Creates a bar chart showing significant variants by gene
  * @param {string} elementId - ID of the container element
@@ -947,10 +1019,11 @@ function populateMultigenicFindings(elementId) {
   document.getElementById(elementId).innerHTML = html
 }
 
-// Export functions for use in other modules
+// Actualizar el objeto window.visualizations para exportar la nueva función
 window.visualizations = {
   createVariantsByGeneChart,
   createConsequenceTypesChart,
+  createConsequenceTypesPercentChart,
   createSignificantVariantsChart,
   createConsequenceDistributionChart,
   createFrequencyComparisonChart,
