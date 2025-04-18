@@ -185,9 +185,12 @@ function createConsequenceTypesPercentChart(elementId) {
       t: 50,
       b: 50,
     },
+    autosize: true,
+    width: null, // Esto permite que el gráfico se ajuste al ancho del contenedor
+    height: 500, // Altura fija para asegurar que sea lo suficientemente alto
   }
 
-  Plotly.newPlot(elementId, traces, layout)
+  Plotly.newPlot(elementId, traces, layout, { responsive: true })
 }
 
 /**

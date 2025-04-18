@@ -88,8 +88,76 @@ function openGenePage(gene) {
   window.open(genePageUrl, "_blank")
 }
 
+/**
+ * Expande un gráfico en un modal
+ * @param {string} chartId - ID del gráfico a expandir
+ * @param {string} title - Título para mostrar en el modal
+ */
+function expandChart(chartId, title) {
+  // Obtener el modal
+  const modal = document.getElementById("chart-modal")
+  const modalTitle = document.getElementById("chart-modal-title")
+  const modalBody = document.getElementById("chart-modal-body")
+
+  // Establecer el título
+  modalTitle.textContent = title
+
+  // Crear un nuevo div para el gráfico expandido
+  const expandedChartDiv = document.createElement("div")
+  expandedChartDiv.id = "expanded-" + chartId
+  expandedChartDiv.style.width = "100%"
+  expandedChartDiv.style.height = "100%"
+
+  // Limpiar el cuerpo del modal y agregar el nuevo div
+  modalBody.innerHTML = ""
+  modalBody.appendChild(expandedChartDiv)
+
+  // Mostrar el modal
+  modal.style.display = "flex"
+
+  // Recrear el gráfico en el modal con dimensiones más grandes
+  const originalChart = document.getElementById(chartId)
+
+  // Determinar qué tipo de gráfico es y recrearlo
+  if (chartId === "variants-by-gene-chart") {
+    window.visualizations.createVariantsByGeneChart("expanded-" + chartId)
+  } else if (chartId === "consequence-types-chart") {
+    window.visualizations.createConsequenceTypesChart("expanded-" + chartId)
+  } else if (chartId === "consequence-types-percent-chart") {
+    window.visualizations.createConsequenceTypesPercentChart("expanded-" + chartId)
+  } else if (chartId === "significant-variants-chart") {
+    window.visualizations.createSignificantVariantsChart("expanded-" + chartId)
+  } else if (chartId === "consequence-distribution-chart") {
+    window.visualizations.createConsequenceDistributionChart("expanded-" + chartId)
+  }
+
+  // Redimensionar el gráfico para que se ajuste al modal
+  // Check if Plotly is defined before using it
+  if (typeof Plotly !== "undefined") {
+    setTimeout(() => {
+      Plotly.relayout("expanded-" + chartId, {
+        autosize: true,
+      })
+    }, 100)
+  } else {
+    console.error("Plotly is not defined. Make sure it is properly imported.")
+  }
+}
+
+/**
+ * Cierra el modal del gráfico expandido
+ */
+function closeExpandedChart() {
+  const modal = document.getElementById("chart-modal")
+  modal.style.display = "none"
+}
+
 // Initialize the application when the DOM is loaded
 document.addEventListener("DOMContentLoaded", initApp)
 
 // Make openGenePage available globally
 window.openGenePage = openGenePage
+
+// Make chart expansion functions available globally
+window.expandChart = expandChart
+window.closeExpandedChart = closeExpandedChart

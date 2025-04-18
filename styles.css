@@ -112,6 +112,97 @@ li {
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 2rem;
   margin-top: 1.5rem;
+  width: 100%;
+}
+
+/* Chart Containers */
+.chart-container {
+  margin: 1.5rem 0;
+  min-height: 400px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: var(--inner-shadow);
+  position: relative; /* Para posicionar el botón de expansión */
+  width: 100%; /* Asegura que todos los contenedores de gráficos ocupen el ancho completo */
+}
+
+/* Botón de expansión para gráficos */
+.expand-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.expand-btn:hover {
+  background-color: #5a4cdb;
+}
+
+.expand-btn i {
+  font-size: 16px;
+}
+
+/* Modal para gráfico expandido */
+.chart-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-modal-content {
+  background-color: white;
+  width: 90%;
+  height: 90%;
+  border-radius: 15px;
+  padding: 20px;
+  position: relative;
+}
+
+.chart-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.chart-modal-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.chart-modal-body {
+  width: 100%;
+  height: calc(100% - 60px);
 }
 
 /* Gene Grid */
@@ -176,16 +267,6 @@ li {
 
 .view-btn:hover {
   background-color: #5a4cdb;
-}
-
-/* Chart Containers */
-.chart-container {
-  margin: 1.5rem 0;
-  min-height: 400px;
-  background-color: white;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: var(--inner-shadow);
 }
 
 /* Tables */
@@ -399,5 +480,9 @@ footer {
 
   .overview-charts {
     grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    min-height: 300px;
   }
 }

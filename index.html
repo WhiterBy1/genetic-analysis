@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudio Genético de Esquizofrenia</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js@2.24.1/dist/plotly.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -54,17 +55,26 @@
             <div class="overview-charts">
                 <div class="chart-container">
                     <h3>Distribución de Variantes por Gen</h3>
+                    <button class="expand-btn" onclick="expandChart('variants-by-gene-chart', 'Distribución de Variantes por Gen')">
+                        <i class="fas fa-expand"></i>
+                    </button>
                     <div id="variants-by-gene-chart"></div>
                 </div>
                 <div class="chart-container">
                     <h3>Tipos de Consecuencias por Gen</h3>
+                    <button class="expand-btn" onclick="expandChart('consequence-types-chart', 'Tipos de Consecuencias por Gen')">
+                        <i class="fas fa-expand"></i>
+                    </button>
                     <div id="consequence-types-chart"></div>
                 </div>
-                <!-- Agregar un nuevo contenedor para la gráfica porcentual después del contenedor "consequence-types-chart" -->
-                <div class="chart-container">
-                    <h3>Distribución Porcentual de Tipos de Consecuencia por Gen</h3>
-                    <div id="consequence-types-percent-chart"></div>
-                </div>
+            </div>
+            <!-- Modificado para que ocupe todo el ancho -->
+            <div class="chart-container" style="width: 100%;">
+                <h3>Distribución Porcentual de Tipos de Consecuencia por Gen</h3>
+                <button class="expand-btn" onclick="expandChart('consequence-types-percent-chart', 'Distribución Porcentual de Tipos de Consecuencia por Gen')">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <div id="consequence-types-percent-chart" style="width: 100%;"></div>
             </div>
         </section>
 
@@ -79,11 +89,17 @@
             
             <div class="chart-container">
                 <h3>Comparación de Variantes Significativas entre Genes</h3>
+                <button class="expand-btn" onclick="expandChart('significant-variants-chart', 'Comparación de Variantes Significativas entre Genes')">
+                    <i class="fas fa-expand"></i>
+                </button>
                 <div id="significant-variants-chart"></div>
             </div>
             
             <div class="chart-container">
                 <h3>Distribución de Tipos de Consecuencia por Gen</h3>
+                <button class="expand-btn" onclick="expandChart('consequence-distribution-chart', 'Distribución de Tipos de Consecuencia por Gen')">
+                    <i class="fas fa-expand"></i>
+                </button>
                 <div id="consequence-distribution-chart"></div>
             </div>
             
@@ -146,6 +162,17 @@
             <p>Estudio realizado por <span class="author-name">Jose David Quiñonez Rehenals</span></p>
             <p>Estudiante de Ingeniería Biomédica en UTB Cartagena</p>
             <p>Datos obtenidos de SCHEMA Browser</p>
+        </div>
+    </div>
+
+    <!-- Modal para gráficos expandidos -->
+    <div id="chart-modal" class="chart-modal">
+        <div class="chart-modal-content">
+            <button class="chart-modal-close" onclick="closeExpandedChart()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="chart-modal-title" id="chart-modal-title"></h3>
+            <div class="chart-modal-body" id="chart-modal-body"></div>
         </div>
     </div>
 
